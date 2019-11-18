@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Piezas;
 
 
@@ -31,7 +27,11 @@ public class Alfil extends General{
         char defensor_Retador = tablero[currentI][currentJ].charAt(2);   //
         
         if((currentI != nextI) && (desplazamientoI == desplazamientoJ)){
-            super.avanzar_capturar(defensor_Retador, currentI, currentJ, nextI, nextJ, tablero);
+            if(super.getRecorridoBloqueado( 2, currentI, currentJ, nextI, nextJ, tablero)){
+                super.avanzar_capturar(defensor_Retador, currentI, currentJ, nextI, nextJ, tablero);
+            } else {
+                System.out.println(" No puedes saltar piezas, intenta de nuevo. ");
+            }
         } else {
             System.out.println("No puede realizar este movimiento, intenta de nuevo");
         }

@@ -1,17 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Piezas;
 
 import shogi.General;
+import Piezas.CasilleroVacio;
 
 /**
  *
  * @author JuanCaballero
  */
 public class Peon extends General{
+    
+    CasilleroVacio vacio = new CasilleroVacio();
     
     private String nombrePeon;
     
@@ -38,14 +37,14 @@ public class Peon extends General{
                 }else {
                     if( nextI == (currentI+1) && (nextJ == (currentJ+1) || nextJ == (currentJ-1)))   //movimiento para comer
                     {
-                        if(tablero[nextI][nextJ] != "    "){                  //verifica que realiza este movimiento para comer
+                        if(tablero[nextI][nextJ] != vacio.getCasilleroVacio()){                  //verifica que realiza este movimiento para comer
                            if(tablero[nextI][nextJ].indexOf("v") >= 0){
                                System.out.println("No puedes comerte una pieza de tu mismo equipo, intenta de nuevo. ");
                            } else {
-                               this.setCapturados(tablero, nextI, nextJ);
+                               this.setCapturados( defensor_Retador,tablero, nextI, nextJ);
                                 System.out.println("Capturó la pieza: "+ tablero[nextI][nextJ]);
                                 tablero[nextI][nextJ] = tablero[currentI][currentJ];
-                                tablero[currentI][currentJ] = "    ";
+                                tablero[currentI][currentJ] = vacio.getCasilleroVacio();
                            } 
                         } else {                            //Si esta vacio no puede realizar el movimiento
                              System.out.println("No puedes realizar este movimiento.");
@@ -61,14 +60,14 @@ public class Peon extends General{
                 }else {
                     if( nextI == (currentI-1) && (nextJ == (currentJ+1) || nextJ == (currentJ-1)))   //movimiento para comer en diagonal
                     {
-                        if(tablero[nextI][nextJ] != "    "){                  //verifica que realiza este movimiento para comer
+                        if(tablero[nextI][nextJ] != vacio.getCasilleroVacio()){                  //verifica que realiza este movimiento para comer
                            if(tablero[nextI][nextJ].indexOf(defensor_Retador) >= 0){
                                System.out.println("No puedes comerte una pieza de tu mismo equipo, intenta de nuevo. ");
                            } else {
-                               this.setCapturados(tablero, nextI, nextJ);
+                               this.setCapturados( defensor_Retador, tablero, nextI, nextJ);
                                 System.out.println("Capturó la pieza: "+ tablero[nextI][nextJ]);
                                 tablero[nextI][nextJ] = tablero[currentI][currentJ];
-                                tablero[currentI][currentJ] = "    ";
+                                tablero[currentI][currentJ] = vacio.getCasilleroVacio();
                            } 
                         } else {                            //Si esta vacio no puede realizar el movimiento
                              System.out.println("No puedes realizar este movimiento.");

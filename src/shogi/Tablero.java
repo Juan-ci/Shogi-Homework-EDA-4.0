@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package shogi;
 
 import java.util.Scanner;
@@ -17,15 +13,15 @@ import Piezas.Lancero;
 import Piezas.Alfil;
 import Piezas.Torre;
 import Piezas.Rey;
-
-//Jugador Retador
-
+import Piezas.CasilleroVacio;
 
 /**
  *
  * @author JuanCaballero
  */
 public class Tablero extends Piezas{
+    
+    CasilleroVacio vacio = new CasilleroVacio();
 
     Peon peonDefensor;
     Oro oroDefensor;
@@ -122,7 +118,7 @@ public class Tablero extends Piezas{
                                     tablero[i][j]= reyDefensor.getNombrePieza();
                                     break;
                                 default:
-                                tablero[i][j]= "    ";
+                                tablero[i][j]= vacio.getCasilleroVacio();
                                 break;
                             }
                     break;
@@ -135,7 +131,7 @@ public class Tablero extends Piezas{
                                 tablero[i][j]= alfilDefensor.getNombrePieza();
                                 break;
                             default:
-                                tablero[i][j]= "    ";
+                                tablero[i][j]= vacio.getCasilleroVacio();
                                 break;
                         }
                     break;
@@ -154,7 +150,7 @@ public class Tablero extends Piezas{
                                 tablero[i][j]= torreRetador.getNombrePieza();
                                 break;
                             default:
-                                tablero[i][j]= "    ";
+                                tablero[i][j]= vacio.getCasilleroVacio();
                                 break;
                         }
                     break;
@@ -185,12 +181,12 @@ public class Tablero extends Piezas{
                                     tablero[i][j]= reyRetador.getNombrePieza();
                                     break;
                                 default:
-                                tablero[i][j]= "    ";
+                                tablero[i][j]= vacio.getCasilleroVacio();
                                 break;
                             }
                     break;
                     default:
-                        tablero[i][j] = "    ";
+                        tablero[i][j] = vacio.getCasilleroVacio();
                     break;
                 }
                 
@@ -209,7 +205,11 @@ public class Tablero extends Piezas{
         for (int i = 0; i < 9; i++) {           //Mostrando el tablero
             System.out.print(i+ "|");
             for (int j = 0; j < 9; j++) {
-                System.out.print(tablero[i][j]);
+                if(j == 8){
+                    System.out.print(tablero[i][j]+ "|"+ i);
+                } else {
+                    System.out.print(tablero[i][j]);
+                }
             }
             System.out.println("\n");
         }
@@ -228,45 +228,11 @@ public class Tablero extends Piezas{
             if(designarTurno == 0){
                 System.out.println("# Turno "+ turno);
                 System.out.println("Turno del Retador\n");
+                procederTurno( '^', tablero );
             } else {
                 System.out.println("# Turno "+ turno);
                 System.out.println("Turno del Defensor\n");
-            }
-            //Ubicacion de la pieza a mover
-            System.out.println("Elija pieza:\n"
-                                + "Ingrese fila: ");
-            currentI = scan.nextInt();
-            System.out.println("Ingrese columna: ");
-            currentJ = scan.nextInt();
-
-            if(designarTurno == 0){
-                if(tablero[currentI][currentJ].indexOf("^") >= 0){ //turno retador
-                    //Ubicacion siguiente de la pieza
-                    System.out.println("Elija destino:\n"
-                                        + "Ingrese fila: ");
-                    nextI = scan.nextInt();
-                    System.out.println("Ingrese columna: ");
-                    nextJ = scan.nextInt();
-                } else {
-                    nextI = currentI;
-                    nextJ = currentJ;
-
-                    System.out.println("Estas eligiendo una ficha de tu contrincante, intenta de nuevo");
-                }
-            } else {        //turno defensor
-                if(tablero[currentI][currentJ].indexOf("v") >= 0){
-                    //Ubicacion siguiente de la pieza
-                    System.out.println("Elija destino:\n"
-                                        + "Ingrese fila: ");
-                    nextI = scan.nextInt();
-                    System.out.println("Ingrese columna: ");
-                    nextJ = scan.nextInt();
-                } else {
-                    nextI = currentI;
-                    nextJ = currentJ;
-
-                    System.out.println("Estas eligiendo una ficha de tu contrincante, intenta de nuevo");
-                }
+                procederTurno( 'v', tablero );
             }
         } while(currentI == nextI && currentJ == nextJ || nextI < 0 || nextI > 8 || nextJ < 0 || nextJ > 8);
                 //misma posicion tanto i como j        o fuera del tablero  
@@ -329,4 +295,30 @@ public class Tablero extends Piezas{
         mostrarTablero(tablero);
     }
     
+    
+    //Encapsulamiento de código para la reutilización del mismo
+    
+    public void procederTurno( char indicador, String[][] tablero){
+        System.out.println("Elija pieza:\n"
+                            + "Ingrese fila: ");
+        currentI = scan.nextInt();
+        System.out.println("Ingrese columna: ");
+        currentJ = scan.nextInt();
+        
+        int defensorOretador = tablero[currentI][currentJ].indexOf(indicador);      //se le pasa el caracter para saber si es defensor o retador
+        
+        if(defensorOretador >= 0){ //turno retador
+            //Ubicacion siguiente de la pieza
+            System.out.println("Elija destino:\n"
+                                + "Ingrese fila: ");
+            nextI = scan.nextInt();
+            System.out.println("Ingrese columna: ");
+            nextJ = scan.nextInt();
+        } else {
+            nextI = currentI;
+            nextJ = currentJ;
+
+            System.out.println("Estas eligiendo una ficha de tu contrincante, intenta de nuevo");
+        }
+    }
 }

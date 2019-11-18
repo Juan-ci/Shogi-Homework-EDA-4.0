@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package shogi;
 
 import java.util.ArrayList;
 import java.util.List;
+import Piezas.CasilleroVacio;
 
 /**
  *
@@ -14,30 +11,51 @@ import java.util.List;
  */
 public abstract class General {
     
-    private List<String> capturados = new ArrayList<String>();
+    CasilleroVacio vacio = new CasilleroVacio();
+    
+    private List<String> capturadosDefensor = new ArrayList<String>();      //Piezas capturadas por el defensor
+    private List<String> capturadosRetador = new ArrayList<String>();
     
     public abstract void movimiento(int currentI, int currentJ, int nextI, int nextJ, String [][] tablero);
     
-    public void setCapturados(String[][] pieza, int i, int j){
-        if( pieza[i][j] == " Kv " || pieza[i][j] == " K^ "){    //Verifica si la pieza capturada es el rey
-            if( pieza[i][j].indexOf("v") >= 0){
-                System.out.println("\tJAQUE MATE \n  El ganador del juego es el jugador Retador. ");
-            } else {
-                System.out.println("\tJAQUE MATE \n  El ganador del juego es el jugador Defensor. ");
-            }
-            System.exit(0);
-        } else {
-            capturados.add(pieza[i][j]);
+    public void setCapturados(char def_Ret, String[][] pieza, int i, int j){
+        
+        switch(def_Ret){
+            case 'v':
+                if(pieza[i][j] == " K^ "){    //Verifica si la pieza capturada es el rey
+                    System.out.println("\tJAQUE MATE \n  El ganador del juego es el jugador Defensor. ");
+                    System.exit(0);
+                } else {
+                    capturadosDefensor.add(pieza[i][j]);
+                }
+            break;
+            case '^':
+                if(pieza[i][j] == " Kv "){    //Verifica si la pieza capturada es el rey
+                    System.out.println("\tJAQUE MATE \n  El ganador del juego es el jugador Retador. ");
+                    System.exit(0);
+                } else {
+                    capturadosRetador.add(pieza[i][j]);
+                }
+            break;
+            default:
+                System.out.println(" Error en setCapturados. ");
+            break;
         }
     }
     
-    public List<String> getCapturados(){
-        return capturados;
+    public List<String> getCapturados(char def_Ret){
+        
+        if(def_Ret == 'v'){
+            return capturadosDefensor;
+        } else {
+            return capturadosRetador;
+        }
     }
     
     public boolean getRecorridoBloqueado(int casos,int currentI, int currentJ,int nextI, int nextJ, String[][] tablero){
         boolean resultado = false;
         int desplazandoI = currentI;
+        int desplazandoJ = currentJ;
         char def_Ret = tablero[currentI][currentJ].charAt(2);
         
         //Evaluando movimiento lancero
@@ -47,10 +65,10 @@ public abstract class General {
                     case 'v':       //lancero defensor " Lv "
                         desplazandoI++;
                         while(resultado == false || desplazandoI < nextI){
-                            if(tablero[desplazandoI][currentJ] == "    " && desplazandoI < nextI){
+                            if(tablero[desplazandoI][currentJ] == vacio.getCasilleroVacio() && desplazandoI < nextI){
                                 desplazandoI++;
                             } else {
-                                if(tablero[desplazandoI][currentJ] != "    " && desplazandoI < nextI){
+                                if(tablero[desplazandoI][currentJ] != vacio.getCasilleroVacio() && desplazandoI < nextI){
                                     break;
                                 } else {
                                     resultado = true;
@@ -61,10 +79,10 @@ public abstract class General {
                     case '^':       //lancero retador " L^ "
                         desplazandoI--;
                         while(resultado == false || desplazandoI > nextI){
-                            if(tablero[desplazandoI][currentJ] == "    " && desplazandoI > nextI){
+                            if(tablero[desplazandoI][currentJ] == vacio.getCasilleroVacio() && desplazandoI > nextI){
                                 desplazandoI--;
                             } else {
-                                if(tablero[desplazandoI][currentJ] != "    " && desplazandoI > nextI){
+                                if(tablero[desplazandoI][currentJ] != vacio.getCasilleroVacio() && desplazandoI > nextI){
                                     break;
                                 } else {
                                     resultado = true;
@@ -80,25 +98,95 @@ public abstract class General {
                     resultado = moverTorreIzquierda_Derecha( currentI, currentJ, nextI, nextJ, tablero);
                 } else if(nextJ == currentJ){
                     resultado = moverTorreAtras_Adelante( currentI, currentJ, nextI, nextJ, tablero);
-                }   
+                }
+            break;
+            case 2:     //movimiento de alfil
+                if(nextI < currentI){       //Movimiento hacia atras
+                    resultado = desplazandoDiagonalAtras(resultado, desplazandoI, desplazandoJ, nextI, nextJ, tablero);
+                } else if( nextI > currentI) {                    //currentI < nextI
+                    resultado = desplazandoDiagonalAdelante(resultado, desplazandoI, desplazandoJ, nextI, nextJ, tablero);
+                }
+            break;
+            default:
+                System.out.println(" Error en getRecorridoBloqueado. ");
+            break;
     }
     return resultado;
- }  
+ }
+    public boolean desplazandoDiagonalAtras(boolean resul, int desplazandoI, int desplazandoJ, int nextI, int nextJ, String[][] tablero){
+    
+        if( nextJ < (desplazandoJ-1)){      //movimiento izquierda
+                        while(nextJ < desplazandoJ){
+                            desplazandoI--;
+                            desplazandoJ--;
+                            if(tablero[desplazandoI][desplazandoJ] != vacio.getCasilleroVacio() && nextJ < desplazandoJ){
+                                resul = false;
+                                break;
+                            } else {
+                                resul = true;
+                            } 
+                        }
+                    } else if(nextJ > (desplazandoJ+1)){    //movimiento derecha
+                        while(nextJ > desplazandoJ){
+                            desplazandoI--;
+                            desplazandoJ++;
+                            if(tablero[desplazandoI][desplazandoJ] != vacio.getCasilleroVacio() && nextJ > desplazandoJ){
+                                resul = false;
+                                break;
+                            } else {
+                                resul = true;
+                            }
+                        }
+                    }
+                    else {        //en caso de avanzar 1 devuelve true
+                        resul =  true;
+                    }
+        return resul;
+    }
+    public boolean desplazandoDiagonalAdelante(boolean resul, int desplazandoI, int desplazandoJ, int nextI, int nextJ, String[][] tablero){
+    
+        if( nextJ < (desplazandoJ-1)){      //movimiento izquierda
+                        while(nextJ < desplazandoJ){
+                            desplazandoI++;
+                            desplazandoJ--;
+                            if(tablero[desplazandoI][desplazandoJ] != vacio.getCasilleroVacio() && nextJ < desplazandoJ){
+                                resul = false;
+                                break;
+                            } else {
+                                resul = true;
+                            } 
+                        }
+                    } else if(nextJ > (desplazandoJ+1)){    //movimiento derecha
+                        while(nextJ > desplazandoJ){
+                            desplazandoI++;
+                            desplazandoJ++;
+                            if(tablero[desplazandoI][desplazandoJ] != vacio.getCasilleroVacio() && nextJ > desplazandoJ){
+                                resul = false;
+                                break;
+                            } else {
+                                resul = true;
+                            } 
+                        }
+                    } else {
+                        resul =  true;
+                    }
+        return resul;
+    }
     
     public void avanzar_capturar(char def_ret, int currentI, int currentJ, int nextI, int nextJ, String[][] tablero){
         //Verifica si tiene el camino bloqueado
-        if(tablero[nextI][nextJ] == "    "){                                                 //Espacio vacio, avanza
+        if(tablero[nextI][nextJ] == vacio.getCasilleroVacio()){                              //Espacio vacio, avanza
             tablero[nextI][nextJ] = tablero[currentI][currentJ];
-            tablero[currentI][currentJ] = "    ";
+            tablero[currentI][currentJ] = vacio.getCasilleroVacio();
             Tablero.turno++;
         } else {
             if(tablero[nextI][nextJ].indexOf(def_ret) >= 0){                                 //Pieza del mismo equipo no puede avanzar
                 System.out.println("No puedes comerte una pieza de tu mismo equipo, intenta de nuevo");
             } else {
-                this.setCapturados(tablero, nextI, nextJ);
+                this.setCapturados( def_ret, tablero, nextI, nextJ);
                 System.out.println("Capturó la pieza: "+ tablero[nextI][nextJ]);
                 tablero[nextI][nextJ] = tablero[currentI][currentJ];
-                tablero[currentI][currentJ] = "    ";
+                tablero[currentI][currentJ] = vacio.getCasilleroVacio();
                 Tablero.turno++;
             }
         }
@@ -114,7 +202,7 @@ public abstract class General {
             while(nextI <= desplazaI){
                 if(nextI == desplazaI ){
                     return resultado = true;
-                } else if(nextI < desplazaI && tablero[desplazaI][nextJ] == "    "){
+                } else if(nextI < desplazaI && tablero[desplazaI][nextJ] == vacio.getCasilleroVacio()){
                     desplazaI--;
                 } else{
                     System.out.println("No puedes saltar piezas, intenta de nuevo.(desplazamiento atras||adelante ");
@@ -127,7 +215,7 @@ public abstract class General {
                 if(nextI == desplazaI ){
                     return resultado = true;
                 }else {
-                    if(tablero[desplazaI][nextJ] == "    "){
+                    if(tablero[desplazaI][nextJ] == vacio.getCasilleroVacio()){
                         desplazaI++;
                     } else {
                         System.out.println("No puedes saltar piezas, intenta de nuevo. ");
@@ -150,7 +238,7 @@ public abstract class General {
                         while(nextJ <= desplazaJ){
                             if(nextJ == desplazaJ ){
                                 return resultado = true;
-                            } else if(nextJ < desplazaJ && tablero[nextI][desplazaJ] == "    "){
+                            } else if(nextJ < desplazaJ && tablero[nextI][desplazaJ] == vacio.getCasilleroVacio()){
                                 desplazaJ--;
                             } else{
                                 System.out.println("No puedes saltar piezas, intenta de nuevo. ");
@@ -163,7 +251,7 @@ public abstract class General {
                         if(nextJ == desplazaJ ){
                             return resultado = true;
                         }else {
-                            if(tablero[nextI][desplazaJ] == "    "){
+                            if(tablero[nextI][desplazaJ] == vacio.getCasilleroVacio()){
                                 desplazaJ++;
                             } else {
                                 System.out.println("No puedes saltar piezas, intenta de nuevo. ");
