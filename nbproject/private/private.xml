@@ -3,15 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/CasilleroVacio.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/shogi/General.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Lancero.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Torre.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Alfil.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Oro.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Peon.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/shogi/Tablero.java</file>
-            <file>file:/C:/Users/JuanCaballero/Documents/NetBeansProjects/Shogi/src/Piezas/Plata.java</file>
+            <file>file:/C:/Users/JuanCaballero/Documents/GitHub/shogi/src/shogi/Shogi.java</file>
+            <file>file:/C:/Users/JuanCaballero/Documents/GitHub/shogi/src/shogi/General.java</file>
+            <file>file:/C:/Users/JuanCaballero/Documents/GitHub/shogi/src/shogi/Tablero.java</file>
         </group>
     </open-files>
 </project-private>

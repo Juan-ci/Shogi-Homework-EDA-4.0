@@ -14,6 +14,7 @@ import Piezas.Alfil;
 import Piezas.Torre;
 import Piezas.Rey;
 import Piezas.CasilleroVacio;
+import java.util.InputMismatchException;
 
 /**
  *
@@ -225,14 +226,20 @@ public class Tablero extends Piezas{
         designarTurno = turno%2;
         
         do {
-            if(designarTurno == 0){
-                System.out.println("# Turno "+ turno);
-                System.out.println("Turno del Retador\n");
-                procederTurno( '^', tablero );
-            } else {
-                System.out.println("# Turno "+ turno);
-                System.out.println("Turno del Defensor\n");
-                procederTurno( 'v', tablero );
+            try{
+                if(designarTurno == 0){
+                    System.out.println("# Turno "+ turno);
+                    System.out.println("Turno del Retador\n");
+                    procederTurno( '^', tablero );
+                    //verificador = true;
+                } else {
+                    System.out.println("# Turno "+ turno);
+                    System.out.println("Turno del Defensor\n");
+                    procederTurno( 'v', tablero );
+                }
+            } catch(InputMismatchException e){
+                System.out.println(" Debes ingresasr un digito del 0 al 8. ");
+                scan.nextLine();
             }
         } while(currentI == nextI && currentJ == nextJ || nextI < 0 || nextI > 8 || nextJ < 0 || nextJ > 8);
                 //misma posicion tanto i como j        o fuera del tablero  
@@ -299,21 +306,22 @@ public class Tablero extends Piezas{
     //Encapsulamiento de código para la reutilización del mismo
     
     public void procederTurno( char indicador, String[][] tablero){
+        
         System.out.println("Elija pieza:\n"
                             + "Ingrese fila: ");
         currentI = scan.nextInt();
         System.out.println("Ingrese columna: ");
         currentJ = scan.nextInt();
-        
+
         int defensorOretador = tablero[currentI][currentJ].indexOf(indicador);      //se le pasa el caracter para saber si es defensor o retador
-        
+
         if(defensorOretador >= 0){ //turno retador
             //Ubicacion siguiente de la pieza
-            System.out.println("Elija destino:\n"
-                                + "Ingrese fila: ");
-            nextI = scan.nextInt();
-            System.out.println("Ingrese columna: ");
-            nextJ = scan.nextInt();
+                    System.out.println("Elija destino:\n"
+                                        + "Ingrese fila: ");
+                    nextI = scan.nextInt();
+                    System.out.println("Ingrese columna: ");
+                    nextJ = scan.nextInt();
         } else {
             nextI = currentI;
             nextJ = currentJ;
