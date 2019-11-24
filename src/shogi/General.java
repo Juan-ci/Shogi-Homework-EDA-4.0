@@ -13,8 +13,8 @@ public abstract class General {
     
     CasilleroVacio vacio = new CasilleroVacio();
     
-    private List<String> capturadosDefensor = new ArrayList<String>();      //Piezas capturadas por el defensor
-    private List<String> capturadosRetador = new ArrayList<String>();
+    public static List<String> capturadosDefensor = new ArrayList<String>();      //Piezas capturadas por el defensor
+    public static List<String> capturadosRetador = new ArrayList<String>();
     
     public abstract void movimiento(int currentI, int currentJ, int nextI, int nextJ, String [][] tablero);
     
