@@ -50,6 +50,7 @@ public class Tablero extends Piezas{
     int nextI;          //posicion i tomada por teclado para posicion siguiente
     int nextJ;          //posicion j tomada por teclado para posicion siguiente
     int designarTurno;
+    int tamañoTablero;
     
     Scanner scan = new Scanner(System.in);
     
@@ -79,6 +80,7 @@ public class Tablero extends Piezas{
         oroRetador = new Oro(" G^ ");
         
         String[][] tablero = new String[9][9];
+        tamañoTablero = tablero.length;
         
         inicioPartida(tablero);
         
@@ -86,7 +88,9 @@ public class Tablero extends Piezas{
     
     public void inicioPartida(String[][] tablero){
         
-        //Armando el tablero para el inicio de partida
+       /*
+        * Armando el tablero y posicionando las piezas en su lugar 
+        */
         
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
@@ -102,9 +106,9 @@ public class Tablero extends Piezas{
                                     tablero[i][j] = lanceroDefensor.getNombrePieza();
                                     break;
                                 case 1:
-                                    tablero[i][j]= caballoDefensor.getNombre();
+                                    tablero[i][j]= caballoDefensor.getNombrePieza();
                                 case 7:
-                                    tablero[i][j]= caballoDefensor.getNombre();
+                                    tablero[i][j]= caballoDefensor.getNombrePieza();
                                     break;
                                 case 2:
                                     tablero[i][j]= plataDefensor.getNombrePieza();
@@ -112,9 +116,9 @@ public class Tablero extends Piezas{
                                     tablero[i][j]= plataDefensor.getNombrePieza();
                                     break;
                                 case 3:
-                                    tablero[i][j]= oroDefensor.getNombre();
+                                    tablero[i][j]= oroDefensor.getNombrePieza();
                                 case 5:
-                                    tablero[i][j]= oroDefensor.getNombre();
+                                    tablero[i][j]= oroDefensor.getNombrePieza();
                                     break;
                                 case 4:
                                     tablero[i][j]= reyDefensor.getNombrePieza();
@@ -138,10 +142,10 @@ public class Tablero extends Piezas{
                         }
                     break;
                     case 2: //fila 3
-                        tablero[i][j]= peonDefensor.getNombrePeon();
+                        tablero[i][j]= peonDefensor.getNombrePieza();
                     break;
                     case 6:
-                        tablero[i][j] = peonRetador.getNombrePeon();
+                        tablero[i][j] = peonRetador.getNombrePieza();
                     break;
                     case 7:
                         switch( j ){
@@ -165,9 +169,9 @@ public class Tablero extends Piezas{
                                     tablero[i][j] = lanceroRetador.getNombrePieza();
                                     break;
                                 case 1:
-                                    tablero[i][j]= caballoRetador.getNombre();
+                                    tablero[i][j]= caballoRetador.getNombrePieza();
                                 case 7:
-                                    tablero[i][j]= caballoRetador.getNombre();
+                                    tablero[i][j]= caballoRetador.getNombrePieza();
                                     break;
                                 case 2:
                                     tablero[i][j]= plataRetador.getNombrePieza();
@@ -175,9 +179,9 @@ public class Tablero extends Piezas{
                                     tablero[i][j]= plataRetador.getNombrePieza();
                                     break;
                                 case 3:
-                                    tablero[i][j]= oroRetador.getNombre();
+                                    tablero[i][j]= oroRetador.getNombrePieza();
                                 case 5:
-                                    tablero[i][j]= oroRetador.getNombre();
+                                    tablero[i][j]= oroRetador.getNombrePieza();
                                     break;
                                 case 4:
                                     tablero[i][j]= reyRetador.getNombrePieza();
@@ -193,18 +197,21 @@ public class Tablero extends Piezas{
                 }
                 
             }
-        }
-        
+        }   
         mostrarTablero(tablero);
-    }                       //FIN METODO INICIO DE PARTIDA
+    }
     
     public void mostrarTablero( String[][]tablero ){
+        
+       /*
+        * Se  muestra el tablero y luego se procede con el siguiente turno
+        */
         
         
         System.out.println("   0   1   2   3   4   5   6   7   8");
         System.out.println("  ===================================");
         
-        for (int i = 0; i < 9; i++) {           //Mostrando el tablero
+        for (int i = 0; i < 9; i++) {
             System.out.print(i+ "|");
             for (int j = 0; j < 9; j++) {
                 if(j == 8){
@@ -220,18 +227,22 @@ public class Tablero extends Piezas{
         
         siguienteMovimiento(tablero, turno);
         
-    }           //FIN MOSTRAR TABLERO
+    }
     
     public void siguienteMovimiento(String[][]tablero, int turno){      
         
+        
         designarTurno = turno%2;
         
-        //a modificar**
-        
-        int decision;
+        int decision = -1;
         char defensor = 'v';
         char retador = '^';
                
+       /*
+        * Pregunta si quiere reinsertar piezas
+        * o procede con turno normal
+        */
+       
         do {
             System.out.println("#Turno "+ turno);
             
@@ -239,8 +250,16 @@ public class Tablero extends Piezas{
                 case 0:
                     System.out.println(" Turno Retador.\n");
                     if(General.capturadosRetador.size() > 0){
-                        System.out.println(" Deseas reinsertar piezas?\n1.Si\n2.No");
-                        decision = scan.nextInt();
+                        
+                        do{
+                            try{
+                                System.out.println(" Deseas reinsertar piezas?\n1.Si\n2.No ");
+                                decision = scan.nextInt();
+                            } catch( InputMismatchException e){
+                                System.out.println("Debes ingresar 1 o 2.");
+                                scan.nextLine();
+                            }
+                        } while(decision < 1 || decision > 2);
                         
                         if( decision == 1){
                             mostrarCapturados( retador , tablero);      //muestra los capturados y se elige pieza a reinsertar
@@ -255,8 +274,16 @@ public class Tablero extends Piezas{
                 case 1:
                     System.out.println(" Turno Defensor.\n");
                     if(General.capturadosDefensor.size() > 0){
-                        System.out.println(" Deseas reinsertar piezas?\n1.Si\n2.No ");
-                        decision = scan.nextInt();
+                        
+                        do{
+                            try{
+                                System.out.println(" Deseas reinsertar piezas?\n1.Si\n2.No ");
+                                decision = scan.nextInt();
+                            } catch( InputMismatchException e){
+                                System.out.println("Debes ingresar 1 o 2.");
+                                scan.nextLine();
+                            }
+                        } while(decision < 1 || decision > 2);
                         
                         if( decision == 1){
                             mostrarCapturados( defensor , tablero);      //muestra los capturados y se elige pieza a reinsertar
@@ -274,6 +301,12 @@ public class Tablero extends Piezas{
         } while(currentI == nextI && currentJ == nextJ || nextI < 0 || nextI > 8 || nextJ < 0 || nextJ > 8);
                 //misma posicion tanto i como j        o fuera del tablero  
         
+       /*
+        * Dependiendo de la pieza seleccionada se verifica
+        * si el movimiento que se quiere realizar esta permitido
+        * para la pieza elegida
+        */
+                
        if(designarTurno != 0){       //turno del defensor
             switch(tablero[currentI][currentJ]){        //verifica la pieza a mover
                 case " Pv ":
@@ -333,8 +366,6 @@ public class Tablero extends Piezas{
     }
     
     public void defensorORetador(String[][] tablero){
-    
-      //  System.out.println("# Turno "+ turno);
         
         try{
             if(designarTurno == 0){
@@ -348,9 +379,12 @@ public class Tablero extends Piezas{
         }
     }
     
-    //Encapsulamiento de código para la reutilización del mismo
-    
     public void procederTurno( char indicador, String[][] tablero){
+        
+       /*
+        * Segun el char recibido se verifica si la pieza seleccionada
+        * le pertenece al jugador que le toca el turno (jugador retador o defensor)
+        */
         
         System.out.println("Elija pieza:\n"
                             + "Ingrese fila: ");
@@ -362,11 +396,11 @@ public class Tablero extends Piezas{
 
         if(defensorOretador >= 0){ //turno retador
             //Ubicacion siguiente de la pieza
-                    System.out.println("Elija destino:\n"
-                                        + "Ingrese fila: ");
-                    nextI = scan.nextInt();
-                    System.out.println("Ingrese columna: ");
-                    nextJ = scan.nextInt();
+            System.out.println("Elija destino:\n"
+                                + "Ingrese fila: ");
+            nextI = scan.nextInt();
+            System.out.println("Ingrese columna: ");
+            nextJ = scan.nextInt();
         } else {
             nextI = currentI;
             nextJ = currentJ;
@@ -377,35 +411,37 @@ public class Tablero extends Piezas{
     
     public void mostrarCapturados(char defensor_retador, String[][] tablero){   //mostrar array de piezas capturadas y se elige pieza a reinsertar
         
+       /*
+        * Se muestran las piezas capturadas por el jugador defensor o jugador retador
+        * segun a quien le corresponda el turno, se toma por teclado la pieza a reinsertar y luego
+        * se llama al metodo que renombra la pieza segun el jugador
+        */
+        
         int contador = 0;
         int posicion;
         String piezaSeleccionada;
         
         switch(defensor_retador){
-            case 'v':       //muestra capturados de defensor
+            case 'v':           //muestra capturados de defensor
                 Iterator iter = General.capturadosDefensor.iterator();
                 while( iter.hasNext()){
                     System.out.println(contador+ ". " + iter.next()+ "\n");
                     contador++;
-                    //System.exit(0);     //momentaneo para probar funcionamiento de mostrar capturados
                 }
                 
-                //System.out.println(" Elija pieza a reinsertar.\n");
                 posicion = verificarEntradaTeclado(General.capturadosDefensor.size(), "Elija pieza a reinsertar. ");      //Hacer metodo para ver que pieza se reinserta y cambiar simbolo retador defensor
-                                                //agregar como parametro variable posicion
+                
                 piezaSeleccionada = General.capturadosDefensor.get(posicion);
                 
                 cambiarNombrePieza(posicion, defensor_retador, piezaSeleccionada, tablero);
             break;
-            case '^':       //muestra capturados por retador
+            case '^':           //muestra capturados por retador
                 Iterator itera = General.capturadosRetador.iterator();
                 while( itera.hasNext()){
                     System.out.println(contador+ ". " + itera.next()+ "\n");
                     contador++;
-                    //System.exit(0);     //momentaneo para probar funcionamiento de mostrar capturados
                 }
                 
-                //System.out.println(" Elija pieza a reinsertar.\n");
                 posicion = verificarEntradaTeclado(General.capturadosRetador.size(), "Elija pieza a reinsertar. ");      //Hacer metodo para ver que pieza se reinserta y cambiar simbolo retador defensor
                 
                 piezaSeleccionada = General.capturadosRetador.get(posicion);
@@ -422,56 +458,121 @@ public class Tablero extends Piezas{
         
         int fila;       //fila donde insertar pieza
         int columna;    //columna donde insertar pieza
-        int contador = 0;
+        boolean verificar = false;      //variable para verificar si hay un peon en la misma columna
+        
+       /*
+        * Segun la pieza seleccionada de los capturados, se le asigna el nuevo
+        * nombre y se reinserta en la posicion que se toma por teclado y
+        * se incrementa el turno , luego se muestra el tablero
+        */
         
         if(defensor_retador == 'v'){    //Defensor
             switch(pieza){
                 case " P^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    
+                   /*
+                    * Verifica si ya hay un peon en la columna donde se 
+                    * desea reinsertar el peon
+                    */
+                    for(int i = 0; i < tamañoTablero; i++){
+                        if(tablero[i][columna] == peonDefensor.getNombrePieza()){
+                            System.out.println("No puedes insertar un peón en una columna donde ya hay un peón. ");
+                            verificar = false;
+                            break;
+                        } else {
+                            verificar = true;
+                        }
+                    }
+                    
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio() && verificar){
+                        tablero[fila][columna] = peonDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " G^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = oroDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " S^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = plataDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " H^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = caballoDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " L^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = lanceroDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " B^ ":
-                    
                     System.out.println(" Insertar en:");
-                    fila = verificarEntradaTeclado(tablero.length, " Fila: ");
-                    columna = verificarEntradaTeclado( tablero.length, " Columna: ");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
                     if( tablero[fila][columna] == vacio.getCasilleroVacio()){
                         tablero[fila][columna] = alfilDefensor.getNombrePieza();
                         General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
                         
-                        //prueba para ver si elimino la pieza
-                        
-                        Iterator itera = General.capturadosDefensor.iterator();
-                        while( itera.hasNext()){
-                            System.out.println(contador+ ". " + itera.next()+ "\n");
-                            contador++;
-                        }
-                        
                         turno++;
                         mostrarTablero(tablero);
-                        //siguienteMovimiento(tablero, turno);
-                        
-                    } else {
-                        System.out.println(" Error al cambiar nombre pieza a insertar");
                     }
                 break;
                 case " T^ ":
+                    System.out.println(" Insertar en:");
+                    fila = verificarEntradaTeclado(tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
-                break;
-                case " K^ ":
-                    
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = torreDefensor.getNombrePieza();
+                        General.capturadosDefensor.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 default:
                     System.out.println(" Error en cambiarNombrePieza");
@@ -481,48 +582,115 @@ public class Tablero extends Piezas{
             switch(pieza){
                 case " Pv ":
                     System.out.println(" Insertar en:\n");
-                    fila = verificarEntradaTeclado( tablero.length, " Fila: ");
-                    //System.out.println("\n Columna: ");
-                    columna = verificarEntradaTeclado( tablero.length, " Columna: ");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
-                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
-                        tablero[fila][columna] = peonRetador.getNombrePeon();
+                    /*
+                    * Verifica si ya hay un peon en la columna donde se 
+                    * desea reinsertar el peon
+                    */
+                    for(int i = 0; i < tamañoTablero; i++){
+                        if(tablero[i][columna] == peonRetador.getNombrePieza()){
+                            System.out.println("No puedes insertar un peón en una columna donde ya hay un peón. ");
+                            verificar = false;
+                            break;
+                        } else {
+                            verificar = true;
+                        }
+                    }
+                    
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio() && verificar){
+                        tablero[fila][columna] = peonRetador.getNombrePieza();
                                 
                         General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
                         
-                        //prueba para ver si elimino la pieza
-                        
-                        Iterator itera = General.capturadosRetador.iterator();
-                        while( itera.hasNext()){
-                            System.out.println(contador+ ". " + itera.next()+ "\n");
-                            contador++;
-                        }
-                        
                         turno++;
                         mostrarTablero(tablero);
-                        //siguienteMovimiento(tablero, turno);
                     }
                 break;
                 case " Gv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = oroRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " Sv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = plataRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " Hv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = caballoRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " Lv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = lanceroRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " Bv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = alfilRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 case " Tv ":
+                    System.out.println(" Insertar en:\n");
+                    fila = verificarEntradaTeclado( tamañoTablero, " Fila: ");
+                    columna = verificarEntradaTeclado( tamañoTablero, " Columna: ");
                     
-                break;
-                case " Kv ":
-                   
+                    if( tablero[fila][columna] == vacio.getCasilleroVacio()){
+                        tablero[fila][columna] = torreRetador.getNombrePieza();
+                                
+                        General.capturadosRetador.remove(posicion);        //elimina del array la pieza seleccionada
+                        
+                        turno++;
+                        mostrarTablero(tablero);
+                    }
                 break;
                 default:
                     System.out.println(" Error en cambiarNombrePieza");
@@ -532,20 +700,20 @@ public class Tablero extends Piezas{
     }
     
     public int verificarEntradaTeclado(int limite, String mensaje){
-        //Metodo para verificar entrada por teclado
-        boolean bandera = false;
-        int entrada = -1;
+        
+       /*
+        *Metodo para verificar la entrada por teclado
+        */
+        int entrada = -1;  //se inicializa porque da error la funcion si no se hace
         
         do{
             System.out.println(mensaje);
             try{
-                    entrada = scan.nextInt();
-                    //return entrada;
+                entrada = scan.nextInt();
             } catch( InputMismatchException e){
                 mensaje = " Debes ingresar un dígito";
                 scan.nextLine();
-            } 
-            //bandera = true;
+            }
         } while(entrada < 0 || entrada > limite);
         
         return entrada;

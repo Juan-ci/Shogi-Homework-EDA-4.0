@@ -14,7 +14,7 @@ public class Caballo extends General{
         nombre = name;
     }
     
-    public String getNombre(){
+    public String getNombrePieza(){
         return nombre;
     }
     
