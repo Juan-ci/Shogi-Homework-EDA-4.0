@@ -19,7 +19,7 @@ public class Peon extends General{
         this.nombrePeon = nombrePieza;
     }
     
-    public String getNombrePeon(){
+    public String getNombrePieza(){
         return this.nombrePeon;
     }
     

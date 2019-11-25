@@ -14,7 +14,7 @@ public class Oro extends General{
         nombre = name;
     }
     
-    public String getNombre(){
+    public String getNombrePieza(){
         return this.nombre;
     }
 
