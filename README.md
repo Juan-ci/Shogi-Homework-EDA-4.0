@@ -10,7 +10,7 @@ Implementaciones en el juego:
   y no saltar piezas a la hora de mover(Torre, Lancero, Alfil).
 -Jaque mate: jaque mate implementado, finalizando el juego y anunciando el jugador ganador.
 -Turnos: contador de turnos, jugador que debe mover (defensor o retador), alternancia de turnos.
--Captura de piezas.
+-Captura de piezas(lista separada para capturados por defensor y capturados por retador).
 -Reinserción de piezas(a la hora de reinsertar el peón se verifica que sea en una columna donde no hay otro peón).
 
 A implementar:
@@ -21,3 +21,5 @@ A implementar:
 Primer entrega parcial:  13-11-19.
 Segunda entrega parcial: 19-11-19.
 Tercera entrega parcial: 24-11-19.
+
+Entrega final: 02-12-19.
