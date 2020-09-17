@@ -4,6 +4,8 @@ package shogi;
 import java.util.ArrayList;
 import java.util.List;
 import Piezas.CasilleroVacio;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  *
@@ -11,12 +13,77 @@ import Piezas.CasilleroVacio;
  */
 public abstract class General {
     
+    Scanner scan = new Scanner(System.in);
+    
     CasilleroVacio vacio = new CasilleroVacio();
     
     public static List<String> capturadosDefensor = new ArrayList<String>();      //Piezas capturadas por el defensor
     public static List<String> capturadosRetador = new ArrayList<String>();
     
+    //LISTA CON LOS NOMBRES DE LAS PIEZAS PROMOCIONADAS
+    public static final List<String> nombrePiezaProm = new ArrayList<String>();
+    
+    //Lista nueva para probar funcionamiento de promocion
+    public static List<String> promocionableDefensor = new ArrayList<String>();
+    
+    public General(){
+        
+        //Piezas promocionadas defensor
+        nombrePiezaProm.add(" G+v"); //Este seria la pieza promocionada que obtenga los movimiento de oro
+        nombrePiezaProm.add(" B+v"); //Este seria la pieza promocionada que obtenga los movimiento del alfil
+        nombrePiezaProm.add(" T+v"); //Este seria la pieza promocionada que obtenga los movimiento de la torre
+        
+        //Piezas promocionadas retador
+        nombrePiezaProm.add(" G+^"); //Este seria la pieza promocionada que obtenga los movimiento de oro
+        nombrePiezaProm.add(" B+^"); //Este seria la pieza promocionada que obtenga los movimiento del alfil
+        nombrePiezaProm.add(" T+^"); //Este seria la pieza promocionada que obtenga los movimiento de la torre
+    }
+    
     public abstract void movimiento(int currentI, int currentJ, int nextI, int nextJ, String [][] tablero);
+    
+    //metodo para almacenamiento y algo mas para promociones
+    
+    public void piezasPromocionables(String nombrePieza, int nextI, int nextJ, String[][] tablero, List<String> nombrePiezaProm){
+    
+        
+        
+        int respuesta = 0;
+        int contador = 0;
+        int posicion;
+        String piezaSeleccionada;
+        
+        //AGREGAR VERIFICADOR DE RESPUESTA DO-WHILE O ALGO ASI
+        System.out.println("Desea promocionar alguna pieza?\n1. Si\n2. No");
+        respuesta = scan.nextInt();
+        
+        if(respuesta == 1){
+            
+            Iterator iter = promocionableDefensor.iterator();
+                while( iter.hasNext()){
+                    System.out.println(contador+ ". " + iter.next()+ "\n");
+                    contador++;
+                }
+                
+                System.out.println("Elija la pieza a promocionar.");
+                posicion = scan.nextInt();
+                
+                piezaSeleccionada = promocionableDefensor.get(posicion);
+                
+                //****Segun el nombre de la pieza, va a depender del nombre a promocionar****
+                switch(piezaSeleccionada){
+                    case " Pv ":
+                    case " Sv ":
+                    case " Hv ":
+                    case " Lv ":
+                            promocionableDefensor.remove(posicion);
+                            tablero[nextI][nextJ] = nombrePiezaProm.get(0);
+                        break;
+                //SEGUIR CON LAS OTRAS PIEZAS PROMOCINABLES
+                }
+        }
+        
+        
+    }
     
     public void setCapturados(char def_Ret, String[][] pieza, int i, int j){
         

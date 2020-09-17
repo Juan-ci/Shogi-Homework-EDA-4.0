@@ -14,6 +14,8 @@ public class Peon extends General{
     
     private String nombrePeon;
     
+    //variable para verificar que la pieza no se agrega mas de una vez al array de piezasPromocionables
+    private boolean inArray = false;
     
     public Peon(String nombrePieza){
         this.nombrePeon = nombrePieza;
@@ -23,6 +25,15 @@ public class Peon extends General{
         return this.nombrePeon;
     }
     
+    public void setInArray(boolean bandera){
+        this.inArray = bandera;
+        
+        General.promocionableDefensor.add(nombrePeon);
+    }
+    
+    public boolean getInArray(){
+        return this.inArray;
+    }
 
     @Override
                       //posicion actual | posicion siguiente
@@ -34,6 +45,14 @@ public class Peon extends General{
             case 'v':
                 if(nextI == (currentI+1) && nextJ == currentJ){
                         super.avanzar_capturar(defensor_Retador, currentI, currentJ, nextI, nextJ, tablero);
+                        
+                        //AGREGADO PARA VERIFICAR PROMOCION PIEZA
+                        if(nextI >= 6){
+                            if(nextI == 6 && inArray == false){
+                                setInArray(true);
+                            }
+                            piezasPromocionables(this.getNombrePieza(),nextI, nextJ, tablero, nombrePiezaProm);
+                        }
                 }else {
                     if( nextI == (currentI+1) && (nextJ == (currentJ+1) || nextJ == (currentJ-1)))   //movimiento para comer
                     {
@@ -45,6 +64,11 @@ public class Peon extends General{
                                 System.out.println("Capturó la pieza: "+ tablero[nextI][nextJ]);
                                 tablero[nextI][nextJ] = tablero[currentI][currentJ];
                                 tablero[currentI][currentJ] = vacio.getCasilleroVacio();
+                                
+                                //AGREGADO PARA VERIFICAR PROMOCION PIEZA
+                                if(nextI >= 6){
+                                    piezasPromocionables(this.getNombrePieza(),nextI, nextJ, tablero, nombrePiezaProm);
+                                }
                            } 
                         } else {                            //Si esta vacio no puede realizar el movimiento
                              System.out.println("No puedes realizar este movimiento.");

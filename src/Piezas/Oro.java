@@ -21,7 +21,16 @@ public class Oro extends General{
     @Override
     public void movimiento(int currentI, int currentJ, int nextI, int nextJ, String[][] tablero) {
         
-        char defensor_Retador = tablero[currentI][currentJ].charAt(2);
+        char defensor_Retador = ' ';
+        int size = tablero[currentI][currentJ].length();
+        
+        for (int i = 0; i < size; i++){
+            if(tablero[currentI][currentJ].charAt(i) == 'v'){
+                defensor_Retador = 'v';
+            } else if(tablero[currentI][currentJ].charAt(i) == '^'){
+                defensor_Retador = '^';
+            }
+        }
         
         switch(defensor_Retador){
             case 'v':

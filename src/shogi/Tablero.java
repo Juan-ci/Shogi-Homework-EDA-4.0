@@ -6,6 +6,7 @@ import java.util.Scanner;
 //Jugador Defensor
 
 import Piezas.Peon;
+import Piezas.OroPromocionado;
 import Piezas.Oro;
 import Piezas.Plata;
 import Piezas.Caballo;
@@ -26,6 +27,7 @@ public class Tablero extends Piezas{
     CasilleroVacio vacio = new CasilleroVacio();
 
     Peon peonDefensor;
+    OroPromocionado peonDefensorPromocionado;
     Oro oroDefensor;
     Plata plataDefensor;
     Caballo caballoDefensor;
@@ -35,6 +37,7 @@ public class Tablero extends Piezas{
     Rey reyDefensor;
     
     Peon peonRetador;
+    OroPromocionado peonRetadorPromocionado;
     Alfil alfilRetador;
     Torre torreRetador;
     Lancero lanceroRetador;
@@ -52,6 +55,9 @@ public class Tablero extends Piezas{
     int designarTurno;
     int tamañoTablero;
     
+    //VARIABLE PARA HABILITAR O NO LA PROMOCIÓN DE PIEZAS
+    
+    
     Scanner scan = new Scanner(System.in);
     
     
@@ -60,6 +66,7 @@ public class Tablero extends Piezas{
         //Piezas del jugador defensor.
         
         peonDefensor = new Peon(" Pv ");
+        peonDefensorPromocionado = new OroPromocionado(" G+v");
         oroDefensor = new Oro(" Gv ");
         plataDefensor = new Plata(" Sv ");
         caballoDefensor = new Caballo(" Hv ");
@@ -71,6 +78,7 @@ public class Tablero extends Piezas{
         //Piezas del jugador retador.
         
         peonRetador = new Peon(" P^ ");
+        peonRetadorPromocionado = new OroPromocionado(" G+^");
         alfilRetador = new Alfil(" B^ ");
         torreRetador = new Torre(" T^ ");
         lanceroRetador = new Lancero(" L^ ");
@@ -237,6 +245,9 @@ public class Tablero extends Piezas{
         int decision = -1;
         char defensor = 'v';
         char retador = '^';
+        
+        //obtiene el valor de la bandera para verificar si lo tiene que agragar en el array de piezasProm
+        boolean promoDefensor = peonDefensor.getInArray();
                
        /*
         * Pregunta si quiere reinsertar piezas
@@ -311,6 +322,15 @@ public class Tablero extends Piezas{
             switch(tablero[currentI][currentJ]){        //verifica la pieza a mover
                 case " Pv ":
                     peonDefensor.movimiento(currentI, currentJ, nextI,nextJ, tablero);
+                    if( nextI > 6){
+                       if(!promoDefensor){
+                           //Si promoDefensor es false, lo cambia a verdadero y no lo vuelve a agregar
+                           peonDefensor.setInArray(true);
+                       }
+                        
+                        //instancia donde se pasa nombre de la pieza a insertar en el array de las piezas que pueden promocionar
+                        //peonDefensor.piezasPromocionables(peonDefensor.getNombrePieza(),nextI, nextJ, tablero, General.nombrePiezaProm);
+                    }
                 break;
                 case " Gv ":
                     oroDefensor.movimiento(currentI, currentJ, nextI,nextJ, tablero);
@@ -332,6 +352,9 @@ public class Tablero extends Piezas{
                 break;
                 case " Kv ":
                     reyDefensor.movimiento(currentI, currentJ, nextI, nextJ, tablero);
+                break;
+                case " G+v":
+                    peonDefensorPromocionado.movimiento(currentI, currentJ, nextI, nextJ, tablero);
                 break;
             }
         } else {            //turno del retador
@@ -362,6 +385,8 @@ public class Tablero extends Piezas{
                 break;
             }
         }
+       //COLOCAR AQUI LA PREGUNTA SI, EN CASO DE PODERSE, DESEA PROMOCIONAR LA PIEZA
+       
         mostrarTablero(tablero);
     }
     
